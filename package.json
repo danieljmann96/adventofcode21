@@ -1,0 +1,22 @@
+{
+  "name": "adventofcode21",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danieljmann96/adventofcode21.git"
+  },
+  "author": "Daniel M",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danieljmann96/adventofcode21/issues"
+  },
+  "homepage": "https://github.com/danieljmann96/adventofcode21#readme",
+  "dependencies": {
+    "read-file": "^0.2.0"
+  }
+}

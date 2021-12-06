@@ -35,16 +35,18 @@ class BingoCard {
     columnsConst.forEach((col, i) => this.numbers[i].adjustColumns(col));
   }
   callNumber(num) {
-    this.numbers.filter(x => !x.marked).forEach(bingoNumber => bingoNumber.setMarked(num));
-    for (let i = 0; i < 5; i++) {
-      if (this.numbers.filter(x => x.marked && x.row === i).length === 5) {
-        this.winningNumber = num;
-        this.hasWon = true;
-        break;
-      } else if (this.numbers.filter(x => x.marked && x.column === i).length === 5) {
-        this.winningNumber = num;
-        this.hasWon = true;
-        break;
+    if (!this.hasWon) {
+      this.numbers.filter(x => !x.marked).forEach(bingoNumber => bingoNumber.setMarked(num));
+      for (let i = 0; i < 5; i++) {
+        if (this.numbers.filter(x => x.marked && x.row === i).length === 5) {
+          this.winningNumber = num;
+          this.hasWon = true;
+          break;
+        } else if (this.numbers.filter(x => x.marked && x.column === i).length === 5) {
+          this.winningNumber = num;
+          this.hasWon = true;
+          break;
+        }
       }
     }
   }
@@ -56,7 +58,7 @@ class BingoCard {
   }
 }
 
-read('day4example.txt', 'utf8', function (err, buffer) {
+read('day4input.txt', 'utf8', function (err, buffer) {
   if (err) {
     console.error(err);
   } else {
@@ -67,17 +69,23 @@ read('day4example.txt', 'utf8', function (err, buffer) {
       outputCards.push(output.slice(i, i + 5));
     }
     let cards = outputCards.map(card => new BingoCard(card));
-    let winningCard;
-    callsLoop: for (let callNumber = 0; callNumber < calls.length; callNumber++) {
+    let firstWinningCard;
+    let lastWinningCard;
+    let firstCardHasWon = false;
+    for (let callNumber = 0; callNumber < calls.length; callNumber++) {
       const call = calls[callNumber];
       for (let cardNumber = 0; cardNumber < cards.length; cardNumber++) {
         cards[cardNumber].callNumber(call);
-        if (cards[cardNumber].hasWon) {
-          winningCard = cards[cardNumber];
-          break callsLoop;
+        if (cards[cardNumber].hasWon && !firstCardHasWon) {
+          firstWinningCard = cards[cardNumber];
+          firstCardHasWon = true;
+        }
+        if (!cards[cardNumber].hasWon) {
+          lastWinningCard = cards[cardNumber];
         }
       }
     }
-    console.log(`Part 1 answer: ${winningCard.getFinalScore()}`);
+    console.log(`Part 1 answer: ${firstWinningCard.getFinalScore()}`);
+    console.log(`Part 2 answer: ${lastWinningCard.getFinalScore()}`);
   }
 });

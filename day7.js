@@ -24,5 +24,23 @@ read('day7input.txt', 'utf8', function (err, buffer) {
       }
     });
     console.log(`Part 1 answer: ${fuel}`);
+    const mean = Math.ceil(crabs.reduce((a, b) => a + b) / crabs.length);
+    const averagesToTest = [];
+    for (let i = -5; i < 6; i++) {
+      averagesToTest.push(mean + i);
+    }
+    const fuels = [];
+    averagesToTest.forEach(average => {
+      let fuel = 0;
+      crabs.forEach(crab => {
+        if (crab < average) {
+          fuel += ((average - crab) * (average - crab + 1)) / 2;
+        } else if (crab > average) {
+          fuel += ((crab - average) * (crab - average + 1)) / 2;
+        }
+      });
+      fuels.push(fuel);
+    });
+    console.log(`Part 2 answer: ${Math.min(...fuels)}`);
   }
 });

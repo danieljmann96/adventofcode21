@@ -7,6 +7,7 @@ class Octopus {
   flashing;
   wasFlashing;
   flashCount;
+  stopCounting;
   constructor(x, y, energy) {
     this.x = x;
     this.y = y;
@@ -14,6 +15,7 @@ class Octopus {
     this.flashing = false;
     this.wasFlashing = false;
     this.flashCount = 0;
+    this.stopCounting = false;
   }
   increaseEnergy() {
     if (!this.wasFlashing) {
@@ -21,7 +23,9 @@ class Octopus {
       if (this.energy > 9) {
         this.flashing = true;
         this.energy = 0;
-        this.flashCount++;
+        if (!this.stopCounting) {
+          this.flashCount++;
+        }
       }
     }
   }
@@ -33,6 +37,9 @@ class Octopus {
     this.flashing = false;
     this.wasFlashing = false;
   }
+  setStopCounting() {
+    this.stopCounting = true;
+  }
 }
 
 read('day11input.txt', 'utf8', function (err, buffer) {
@@ -40,7 +47,6 @@ read('day11input.txt', 'utf8', function (err, buffer) {
     console.error(err);
   } else {
     const rows = buffer.split('\n').map(x => x.split('').filter(a => a !== '\r'));
-    //const rows = ['11111', '19991', '19191', '19991', '11111'].map(x => x.split(''));
     const octs = rows
       .reverse()
       .map((row, y) => row.map((energy, x) => new Octopus(x, y, energy)))
@@ -63,7 +69,8 @@ read('day11input.txt', 'utf8', function (err, buffer) {
           return { x: a.x, y: a.y };
         });
     }
-    for (let step = 1; step < 101; step++) {
+    let finalStep = 0;
+    for (let step = 1; step < Infinity; step++) {
       octs.forEach(oct => {
         oct.increaseEnergy();
       });
@@ -77,10 +84,19 @@ read('day11input.txt', 'utf8', function (err, buffer) {
           }
         });
       }
+      if (octs.filter(oct => oct.wasFlashing).length === octs.length) {
+        finalStep = step;
+        break;
+      }
       octs.forEach(oct => {
         oct.clear();
+        if (step === 100) {
+          //For part 1 answer
+          oct.setStopCounting();
+        }
       });
     }
     console.log(`Part 1 answer: ${octs.reduce((a, b) => a + b.flashCount, 0)}`);
+    console.log(`Part 2 answer: ${finalStep}`);
   }
 });

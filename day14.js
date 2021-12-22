@@ -29,7 +29,7 @@ read('day14input.txt', 'utf8', function (err, buffer) {
       .splice(2, rows.length - 2)
       .map(x => (x.includes('\r') ? x.substring(0, x.length - 1) : x))
       .map(x => x.split(' -> '));
-    const steps = 40; //Change for part 1
+    const steps = 10;
     for (let i = 0; i < steps; i++) {
       const insertions = [];
       let nextInsertionIndex = 1;
@@ -41,8 +41,7 @@ read('day14input.txt', 'utf8', function (err, buffer) {
           nextInsertionIndex += 2;
         }
       });
-      insertions.forEach((insertion, j) => {
-        console.log(`Step ${i + 1} / Insertion ${j + 1}`);
+      insertions.forEach(insertion => {
         polymer = [
           ...polymer.slice(0, insertion.position),
           insertion.value,
@@ -51,6 +50,6 @@ read('day14input.txt', 'utf8', function (err, buffer) {
       });
     }
 
-    console.log(`Answer: ${most(polymer) - least(polymer)}`);
+    console.log(`Part 1 answer: ${most(polymer) - least(polymer)}`);
   }
 });
